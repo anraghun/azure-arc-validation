@@ -1,10 +1,8 @@
 # Test catalog
 
-This file contains descriptions of the conformance test plugins present in this repository.
+Below is the list of test descriptions per conformance plugin.
 
-## Core
-
-This test plugin will determine if the Kubernetes cluster is Azure Arc conformant. Following tests are a part of this test suite:
+## Arc for K8s Platform
 
 - `test_connected_cluster_resource`: This test will be responsible for monitoring the connected cluster ARM resource. It will fail if the connected cluster was not found or did not have provisioning state as 'Succeeded'.
 

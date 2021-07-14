@@ -1,0 +1,51 @@
+# TODO:
+# Add logic to upload results
+
+# Set the following environment variables to run the test suite
+
+# Common Variables
+# Some of the variables need to be populated from the service principal provided to you by Microsoft
+connectedClustedId=$(tr -dc A-Za-z0-9 </dev/urandom | head -c 7 ; echo '')
+AZ_TENANT_ID= # tenant field of the service principal
+AZ_SUBSCRIPTION_ID= # subscription id of the azure subscription (will be provided)
+AZ_CLIENT_ID= # appid field of the service principal
+AZ_CLIENT_SECRET= # password field of the service principal
+AZ_STORAGE_ACCOUNT= # name of your storage account
+AZ_STORAGE_ACCOUNT_SAS= # sas token for your storage account
+RESOURCE_GROUP= # resource group name; set this to the resource grou
+CLUSTERNAME=arc-partner-test-$connectedClustedId # name of the arc connected cluster
+LOCATION=eastus # location of the arc connected cluster
+
+# Platform Cleanup Plugin
+CLEANUP_TIMEOUT=1500 # time in seconds after which the platform cleanup plugin times out
+
+sonobuoy run --wait \
+--plugin arc-k8s-platform/platform.yaml \
+--plugin-env azure-arc-platform.TENANT_ID=$AZ_TENANT_ID \
+--plugin-env azure-arc-platform.SUBSCRIPTION_ID=$AZ_SUBSCRIPTION_ID \
+--plugin-env azure-arc-platform.RESOURCE_GROUP=$RESOURCE_GROUP \
+--plugin-env azure-arc-platform.CLUSTER_NAME=$CLUSTERNAME \
+--plugin-env azure-arc-platform.LOCATION=$LOCATION \
+--plugin-env azure-arc-platform.CLIENT_ID=$AZ_CLIENT_ID \
+--plugin-env azure-arc-platform.CLIENT_SECRET=$AZ_CLIENT_SECRET \
+--plugin arc-k8s-platform/cleanup.yaml \
+--plugin-env azure-arc-agent-cleanup.TENANT_ID=$AZ_TENANT_ID \
+--plugin-env azure-arc-agent-cleanup.SUBSCRIPTION_ID=$AZ_SUBSCRIPTION_ID \
+--plugin-env azure-arc-agent-cleanup.RESOURCE_GROUP=$RESOURCE_GROUP \
+--plugin-env azure-arc-agent-cleanup.CLUSTER_NAME=$CLUSTERNAME \
+--plugin-env azure-arc-agent-cleanup.CLEANUP_TIMEOUT=$CLEANUP_TIMEOUT \
+--plugin-env azure-arc-agent-cleanup.CLIENT_ID=$AZ_CLIENT_ID \
+--plugin-env azure-arc-agent-cleanup.CLIENT_SECRET=$AZ_CLIENT_SECRET \
+
+sonobuoyResults=$(sonobuoy retrieve)
+mkdir results
+mv $sonobuoyResults results/$sonobuoyResults
+cp partner-metadata.md results/partner-metadata.md
+tar -czvf conformance-results.tar.gz results
+rm -rf results
+
+az login --service-principal --username $AZ_CLIENT_ID --password $AZ_CLIENT_SECRET --tenant $AZ_TENANT_ID
+az account set -s $AZ_SUBSCRIPTION_ID
+
+az storage container create -n conformance-results --account-name $AZ_STORAGE_ACCOUNT --sas-token $AZ_STORAGE_ACCOUNT_SAS
+az storage blob upload --file conformance-results.tar.gz --name conformance-results.tar.gz --container-name conformance-results --account-name $AZ_STORAGE_ACCOUNT --sas-token $AZ_STORAGE_ACCOUNT_SAS
