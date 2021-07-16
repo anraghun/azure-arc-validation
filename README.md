@@ -23,6 +23,12 @@ The testing strategy can be broken down into two parts:
 - **Update to partner offering**: The new version of the partner offering is tested against N, N-1 and N-2 minor versions of Arc for K8s and Arc enabled Data Services.
 - **Update to Azure Arc components**: The new version of the Azure Arc component is tested against N, N-2 and N-2 minor versions of the partner offering.
 
+| Arc for K8s Minor Release | Version |
+| :---: | :----: |
+| N | 1.3.8 |
+| N-1 | 1.2.0 |
+| N-2 | 1.1.0 |
+
 ### Partner Responsibility
 
 1. Partners will run the conformance tests according to the above strategy and produce successful results at least 7 days prior to their public/stable release.

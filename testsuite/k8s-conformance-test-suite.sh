@@ -12,6 +12,7 @@ AZ_STORAGE_ACCOUNT_SAS= # sas token for your storage account
 RESOURCE_GROUP= # resource group name; set this to the resource grou
 CLUSTERNAME=arc-partner-test-$connectedClustedId # name of the arc connected cluster
 LOCATION=eastus # location of the arc connected cluster
+ARC_PLATFORM_VERSION= # version of Arc for K8s platform to be installed
 
 # Platform Cleanup Plugin
 CLEANUP_TIMEOUT=1500 # time in seconds after which the platform cleanup plugin times out
@@ -39,6 +40,7 @@ sonobuoy run --wait \
 --plugin-env azure-arc-platform.LOCATION=$LOCATION \
 --plugin-env azure-arc-platform.CLIENT_ID=$AZ_CLIENT_ID \
 --plugin-env azure-arc-platform.CLIENT_SECRET=$AZ_CLIENT_SECRET \
+--plugin-env azure-arc-platform.HELMREGISTRY=mcr.microsoft.com/azurearck8s/batch1/stable/azure-arc-k8sagents:$ARC_PLATFORM_VERSION \
 --plugin arc-k8s-platform/cleanup.yaml \
 --plugin-env azure-arc-agent-cleanup.TENANT_ID=$AZ_TENANT_ID \
 --plugin-env azure-arc-agent-cleanup.SUBSCRIPTION_ID=$AZ_SUBSCRIPTION_ID \
@@ -48,7 +50,7 @@ sonobuoy run --wait \
 --plugin-env azure-arc-agent-cleanup.CLIENT_ID=$AZ_CLIENT_ID \
 --plugin-env azure-arc-agent-cleanup.CLIENT_SECRET=$AZ_CLIENT_SECRET \
 
-echo "Test execution completed..\nRetrieving results"
+echo "Test execution completed..Retrieving results"
 
 sonobuoyResults=$(sonobuoy retrieve)
 sonobuoy results $sonobuoyResults

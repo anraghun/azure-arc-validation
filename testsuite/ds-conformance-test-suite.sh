@@ -34,7 +34,7 @@ sonobuoy run --wait
 --plugin-env azure-arc-ds-platform.CLIENT_ID=$AZ_CLIENT_ID \
 --plugin-env azure-arc-ds-platform.CLIENT_SECRET=$AZ_CLIENT_SECRET
 
-echo "Test execution completed..\nRetrieving results"
+echo "Test execution completed..Retrieving results"
 
 sonobuoyResults=$(sonobuoy retrieve)
 sonobuoy results $sonobuoyResults
