@@ -1,7 +1,7 @@
 # Set the following environment variables to run the test suite
 
 # Common Variables
-# Some of the variables need to be populated from the service principal provided to you by Microsoft
+# Some of the variables need to be populated from the service principal and storage account details provided to you by Microsoft
 AZ_TENANT_ID= # tenant field of the service principal
 AZ_SUBSCRIPTION_ID= # subscription id of the azure subscription (will be provided)
 AZ_CLIENT_ID= # appid field of the service principal
@@ -10,12 +10,12 @@ AZ_STORAGE_ACCOUNT= # name of your storage account
 AZ_STORAGE_ACCOUNT_SAS= # sas token for your storage account
 RESOURCE_GROUP= # resource group name; set this to the resource grou
 LOCATION=eastus # location of the arc connected cluster
-NAMESPACE=
-STORAGE_CLASS=
-CONFIG_PROFILE=
-AZDATA_USERNAME=
-AZDATA_PASSWORD=
-SQL_INSTANCE_NAME=
+NAMESPACE=arc-ds-controller # namespace of the data controller
+STORAGE_CLASS=default # choose the storage class
+CONFIG_PROFILE=azure-arc-aks-default-storage # choose the config profile
+AZDATA_USERNAME=azureuser # database username
+AZDATA_PASSWORD=Welcome1234% # database password
+SQL_INSTANCE_NAME=arc-sql # sql instance name
 
 echo "Running the test suite.."
 

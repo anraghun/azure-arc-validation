@@ -1,7 +1,7 @@
 # Set the following environment variables to run the test suite
 
 # Common Variables
-# Some of the variables need to be populated from the service principal provided to you by Microsoft
+# Some of the variables need to be populated from the service principal and storage account details provided to you by Microsoft
 connectedClustedId=$(tr -dc A-Za-z0-9 </dev/urandom | head -c 7 ; echo '')
 AZ_TENANT_ID= # tenant field of the service principal
 AZ_SUBSCRIPTION_ID= # subscription id of the azure subscription (will be provided)
@@ -9,10 +9,10 @@ AZ_CLIENT_ID= # appid field of the service principal
 AZ_CLIENT_SECRET= # password field of the service principal
 AZ_STORAGE_ACCOUNT= # name of your storage account
 AZ_STORAGE_ACCOUNT_SAS= # sas token for your storage account
+ARC_PLATFORM_VERSION= # version of Arc for K8s platform to be installed
 RESOURCE_GROUP= # resource group name; set this to the resource grou
 CLUSTERNAME=arc-partner-test-$connectedClustedId # name of the arc connected cluster
 LOCATION=eastus # location of the arc connected cluster
-ARC_PLATFORM_VERSION= # version of Arc for K8s platform to be installed
 
 # Platform Cleanup Plugin
 CLEANUP_TIMEOUT=1500 # time in seconds after which the platform cleanup plugin times out
