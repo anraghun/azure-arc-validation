@@ -1,11 +1,7 @@
-# TODO:
-# Add logic to upload results
-
 # Set the following environment variables to run the test suite
 
 # Common Variables
 # Some of the variables need to be populated from the service principal provided to you by Microsoft
-connectedClustedId=$(tr -dc A-Za-z0-9 </dev/urandom | head -c 7 ; echo '')
 AZ_TENANT_ID= # tenant field of the service principal
 AZ_SUBSCRIPTION_ID= # subscription id of the azure subscription (will be provided)
 AZ_CLIENT_ID= # appid field of the service principal
@@ -13,36 +9,42 @@ AZ_CLIENT_SECRET= # password field of the service principal
 AZ_STORAGE_ACCOUNT= # name of your storage account
 AZ_STORAGE_ACCOUNT_SAS= # sas token for your storage account
 RESOURCE_GROUP= # resource group name; set this to the resource grou
-CLUSTERNAME=arc-partner-test-$connectedClustedId # name of the arc connected cluster
 LOCATION=eastus # location of the arc connected cluster
+NAMESPACE=
+STORAGE_CLASS=
+CONFIG_PROFILE=
+AZDATA_USERNAME=
+AZDATA_PASSWORD=
+SQL_INSTANCE_NAME=
 
-# Platform Cleanup Plugin
-CLEANUP_TIMEOUT=1500 # time in seconds after which the platform cleanup plugin times out
+echo "Running the test suite.."
 
-sonobuoy run --wait \
---plugin arc-k8s-platform/platform.yaml \
---plugin-env azure-arc-platform.TENANT_ID=$AZ_TENANT_ID \
---plugin-env azure-arc-platform.SUBSCRIPTION_ID=$AZ_SUBSCRIPTION_ID \
---plugin-env azure-arc-platform.RESOURCE_GROUP=$RESOURCE_GROUP \
---plugin-env azure-arc-platform.CLUSTER_NAME=$CLUSTERNAME \
---plugin-env azure-arc-platform.LOCATION=$LOCATION \
---plugin-env azure-arc-platform.CLIENT_ID=$AZ_CLIENT_ID \
---plugin-env azure-arc-platform.CLIENT_SECRET=$AZ_CLIENT_SECRET \
---plugin arc-k8s-platform/cleanup.yaml \
---plugin-env azure-arc-agent-cleanup.TENANT_ID=$AZ_TENANT_ID \
---plugin-env azure-arc-agent-cleanup.SUBSCRIPTION_ID=$AZ_SUBSCRIPTION_ID \
---plugin-env azure-arc-agent-cleanup.RESOURCE_GROUP=$RESOURCE_GROUP \
---plugin-env azure-arc-agent-cleanup.CLUSTER_NAME=$CLUSTERNAME \
---plugin-env azure-arc-agent-cleanup.CLEANUP_TIMEOUT=$CLEANUP_TIMEOUT \
---plugin-env azure-arc-agent-cleanup.CLIENT_ID=$AZ_CLIENT_ID \
---plugin-env azure-arc-agent-cleanup.CLIENT_SECRET=$AZ_CLIENT_SECRET \
+sonobuoy run --wait 
+--plugin arc-dataservices/dataservices.yaml \
+--plugin-env azure-arc-ds-platform.NAMESPACE=$NAMESPACE \
+--plugin-env azure-arc-ds-platform.STORAGE_CLASS=$STORAGE_CLASS \
+--plugin-env azure-arc-ds-platform.CONFIG_PROFILE=$CONFIG_PROFILE \
+--plugin-env azure-arc-ds-platform.AZDATA_USERNAME=$AZDATA_USERNAME \
+--plugin-env azure-arc-ds-platform.AZDATA_PASSWORD=$AZDATA_PASSWORD \
+--plugin-env azure-arc-ds-platform.SQL_INSTANCE_NAME=$SQL_INSTANCE_NAME \
+--plugin-env azure-arc-ds-platform.TENANT_ID=$AZ_TENANT_ID \
+--plugin-env azure-arc-ds-platform.SUBSCRIPTION_ID=$AZ_SUBSCRIPTION_ID \
+--plugin-env azure-arc-ds-platform.RESOURCE_GROUP=$RESOURCE_GROUP \
+--plugin-env azure-arc-ds-platform.LOCATION=$LOCATION \
+--plugin-env azure-arc-ds-platform.CLIENT_ID=$AZ_CLIENT_ID \
+--plugin-env azure-arc-ds-platform.CLIENT_SECRET=$AZ_CLIENT_SECRET
+
+echo "Test execution completed..\nRetrieving results"
 
 sonobuoyResults=$(sonobuoy retrieve)
+sonobuoy results $sonobuoyResults
 mkdir results
 mv $sonobuoyResults results/$sonobuoyResults
 cp partner-metadata.md results/partner-metadata.md
 tar -czvf conformance-results.tar.gz results
 rm -rf results
+
+echo "Publishing results.."
 
 az login --service-principal --username $AZ_CLIENT_ID --password $AZ_CLIENT_SECRET --tenant $AZ_TENANT_ID
 az account set -s $AZ_SUBSCRIPTION_ID
