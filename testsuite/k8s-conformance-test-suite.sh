@@ -10,7 +10,7 @@ AZ_CLIENT_SECRET= # password field of the service principal
 AZ_STORAGE_ACCOUNT= # name of your storage account
 AZ_STORAGE_ACCOUNT_SAS= # sas token for your storage account
 ARC_PLATFORM_VERSION= # version of Arc for K8s platform to be installed
-RESOURCE_GROUP= # resource group name; set this to the resource grou
+RESOURCE_GROUP= # resource group name; set this to the resource group
 CLUSTERNAME=arc-partner-test-$connectedClustedId # name of the arc connected cluster
 LOCATION=eastus # location of the arc connected cluster
 
