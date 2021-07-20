@@ -23,11 +23,19 @@ The testing strategy can be broken down into two parts:
 - **Update to partner offering**: The new version of the partner offering is tested against N, N-1 and N-2 minor versions of Arc for K8s and Arc enabled Data Services.
 - **Update to Azure Arc components**: The new version of the Azure Arc component is tested against N, N-2 and N-2 minor versions of the partner offering.
 
+By default the test suite will install the latest versions of Arc for K8s and Arc enabled Data Services
+
 | Arc for K8s Minor Release | Version |
 | :---: | :----: |
 | N | 1.3.8 |
 | N-1 | 1.2.0 |
 | N-2 | 1.1.0 |
+
+| Arc enabled Data Services Minor Release | Version |
+| :---: | :----: |
+| N | ? |
+| N-1 | - |
+| N-2 | - |
 
 ### Partner Responsibility
 
